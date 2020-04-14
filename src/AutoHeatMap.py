@@ -9,51 +9,71 @@ import time
 
 #*****************************SETUP******************************
 
-images = ["southcamp.jpg","northcamp.jpg","ridge.jpg","lifecenter.jpg","bbhville.jpg","therest.jpg"]
+images = ["southcamp.jpg","northcamp.png","ridge.png","lifecenter.png","bbhville.png","therest.png"]
 
-#*********************************PREVIEW
-for i in images:
-    plt.figure(figsize=(16, 16))
-    #select_location = input("Please enter site: ") #include .jpg
-    #print (i)
-    if i in images:
-        index = images.index(i)
-    location = mpimg.imread(images[index])
-    imgplot = plt.imshow(location)
-print(imgplot)
-#***************************************
+# #*********************************PREVIEW
+# for i in images:
+#     plt.figure(figsize=(16, 16))
+#     #select_location = input("Please enter site: ") #include .jpg
+#     #print (i)
+#     if i in images:
+#         index = images.index(i)
+#     location = mpimg.imread(images[index])
+#     #imgplot = plt.imshow(location)
+# #print(imgplot)
+# #***************************************
 
-#***************************VARIABLES******************************
+df = pd.read_csv ('METADATA13.csv')
 
 overlay_drawing = []
 loc_image = []
-risk_data = 'Heat Map Sites.csv'
-line_num = 0
+
 risk_high = []
-risk_med = []
-risk_low = []
+risk_med_br = []
+risk_med_li = []
+risk_low_br = []
+risk_low_li = []
+no_risk = []
+
 loc_risk =[]
 out = []
 
+data = []
+
 # SETTING COLOR AND TRANSPARENCY
-colorGrn = (0, 255, 0) # SETS THE INITIAL COLOR OF MAP
-colorYel = (255, 255, 0) # SETS THE INITIAL COLOR OF AN ELLIPSE
+colorYel = (255, 255, 0) 
+colorLitYel = (255, 255, 0) 
+colorOng = (255, 144, 0)
+colorLitOng = (255,144,0)
 colorRed = (255, 0, 0)
-colorBlank = (0,0,0)
+colorBlnk = (255, 0, 0)
 
-degree_transparency_grn = .3
-degree_transparency_yel = .5 # HOW TRANSPARENT; 1 MEANING FULLY, 0 MEANING NO TRANSPARENCY
-degree_transparency_red = .5
-degree_transparency_blank = .0
+# HOW TRANSPARENT; 1 MEANING FULLY, 0 MEANING NO TRANSPARENCY
 
-opacity_grn = int(255 * degree_transparency_grn) # DETERMINING DEGREE OF TRANSPARENCY MASK
-colorGrn = colorGrn + (opacity_grn,)
-opacity_yel = int(255 * degree_transparency_yel) # DETERMINING DEGREE OF TRANSPARENCY MASK
-colorYel = colorYel + (opacity_yel,) # ADDING ALPHA CHANNEL TO SELECTED COLOR
-opacity_red = int(255 * degree_transparency_red) # DETERMINING DEGREE OF TRANSPARENCY MASK
+degree_transparency_yel = .6
+degree_transparency_lityel = .2
+degree_transparency_ong = .6
+degree_transparency_litong = .2
+degree_transparency_red = .7
+degree_transparency_blnk = .0
+
+
+# DETERMINING DEGREE OF TRANSPARENCY MASK AND ADDING ALPHA CHANNEL TO SELECTED COLOR
+opacity_yel = int(255 * degree_transparency_yel)
+colorYel = colorYel + (opacity_yel,) 
+opacity_lityel = int(255 * degree_transparency_lityel) 
+colorLitYel = colorLitYel + (opacity_lityel,)
+
+opacity_ong = int(255 * degree_transparency_yel) 
+colorOng = colorOng + (opacity_ong,) 
+opacity_litong = int(255 * degree_transparency_litong) 
+colorLitOng = colorLitOng + (opacity_litong,)
+
+opacity_red = int(255 * degree_transparency_red) 
 colorRed = colorRed + (opacity_red,)
-opacity_blank = int(255 * degree_transparency_blank) # DETERMINING DEGREE OF TRANSPARENCY MASK
-colorBlank = colorBlank + (opacity_blank,)
+
+opacity_blnk = int(255 * degree_transparency_blnk) 
+colorBlnk = colorBlnk + (opacity_blnk,)
 
 # LABELING COORDINATES OF WHERE BUILDINGS ARE LOCATED
 sc_coords = {"Hamilton":(700,1000, 800,1100),"Berman":(980,1130,1080,1230),
@@ -84,80 +104,97 @@ bh_coords = {"Granite":(520,190,620,290), "Slate":(440,260,540,360),
 
 tr_coords = {"Vista":(330,290,430,390),"Wawanda":(1180,450,1280,550)}
 
+##FOR LOOP TO ITERATE THROUGH EXCEL DATA***************************************************
+for index, row in df.iterrows():
 
-#*****************************************************************END
+# 
+    house = str(row['LOCATION'])
+    pos_sta = float(row['ACTIVE'])
+    pos_res = float(row['RES, POS, ACTIVE'])
+    pend_res = float(row['RES, PEND, ACTIVE'])
+    symp_res = float(row['RES, S/S, ACTIVE'])
+    pend_sta = float(row['staff tested, pending'])
+    staff_sym = float(row['ACTIVE S&S']) 
+    
+    
+#HIGH RISK
+    if pos_sta > 0:
+        risk_high.append(str(house))
+    if pos_res > 0:
+        risk_high.append(str(house))
+        
+#MEDIUM RISK BRIGHT
+    elif pend_res > 0:
+        risk_med_br.append(str(house))
+#MEDIUM RISK LIGHT
+    elif symp_res > 0:
+        risk_med_li.append(str(house))
+        
+#LOW RISK BRIGHT
+    elif pend_sta > 0:
+        risk_low_br.append(str(house))
+#LOW RISK LIGHT
+    elif staff_sym > 1:
+        risk_low_li.append(str(house))
+    elif staff_sym <= 1:
+        no_risk.append(str(house))
+        print (house)
 
+##!!!!!!!!!!!!! bug happening because value criteria not being met !!!!!!!!!!!!!!!!!!!!!!!!
 
-#READ EXCEL APPLY RISK ***********************************************************
-with open('Heat Map Sites.csv', 'r') as csvfile:
-    line_reader = csv.reader(csvfile, delimiter=',', quotechar="\"")
-    for row in line_reader:
-        line_num = line_num + 1
-        #print (','.join(row)) #prints entire .csv 
-        if line_num == 1:
-            #print("\n Skipping the header row  \n")
-            continue
-            
-#these variables MUST include type or else they cannot be actioned         
-        houses = str(row[0])
-        activeA = int(row [3])
-        activeBSS = int(row[9])
+#******************************************************************************END
 
-#risk variables currently set -- high >= 1 @ active person A and >=2 activeBSS -- med == 1 activeBSS
-        if activeBSS >= 2:
-            risk_high.append(str(houses))
-        elif activeA >= 1:
-            risk_high.append(str(houses))
-        elif activeBSS == 1:
-            risk_med.append(str(houses))
-        elif activeBSS == 0:
-            risk_low.append(str(houses))
-#******************************************************************************END 
-
-
-#*********************CREATE IMAGES**********************
 for i in images:
-
+    #print("The picture is {}".format(i[0:len(i)-4]))
     index = images.index(i)
     loc_image = Image.open(images[index]).convert("RGBA")
     if i == "southcamp.jpg":
+        #print (coords)
         coords = sc_coords
-    elif i == "northcamp.jpg":
+    elif i == "northcamp.png":
+        #print (coords)
         coords = nc_coords
-    elif i == "ridge.jpg":
+    elif i == "ridge.png":
+        #print (coords)
         coords = ri_coords
-    elif i == "lifecenter.jpg":
+    elif i == "lifecenter.png":
+        #print (coords)
         coords = lc_coords
-    elif i == "bbhville.jpg":
+    elif i == "bbhville.png":
+        #print (coords)
         coords = bh_coords
-    elif i == "therest.jpg":
+    elif i == "therest.png":
+        #print (coords)
         coords = tr_coords
-    
+
     overlay = Image.new("RGBA", loc_image.size)
     overlay_drawing = ImageDraw.Draw(overlay)
-    loc_risk = Image.alpha_composite(loc_image, overlay)
+#     loc_risk = Image.alpha_composite(loc_image, overlay)
 
-	for key, value in coords.items():
-	    #print(key)
-	    if key in risk_high:
-	        print(key)
-	        overlay_drawing.ellipse(coords[key], fill=colorRed)
-	        loc_risk = Image.alpha_composite(loc_image, overlay)
-	    elif key in risk_med: 
-	        overlay_drawing.ellipse(coords[key], fill=colorYel)
-	        loc_risk = Image.alpha_composite(loc_image, overlay)
-	    elif key in risk_low: 
-	        overlay_drawing.ellipse(coords[key], fill=colorGrn)
-	        loc_risk = Image.alpha_composite(loc_image, overlay)
-	        loc_risk.show()
-
-
-
-
-
-
-
-
+    for key, value in coords.items():
+        if key in risk_high:
+            data = [str(key)]
+            overlay_drawing.ellipse(coords[key], fill=colorRed)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+        elif key in risk_med_br: 
+            overlay_drawing.ellipse(coords[key], fill=colorOng)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+        elif key in risk_med_li: 
+            overlay_drawing.ellipse(coords[key], fill=colorLitOng)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+        elif key in risk_low_br:
+            overlay_drawing.ellipse(coords[key], fill=colorYel)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+        elif key in risk_low_li:
+            overlay_drawing.ellipse(coords[key], fill=colorLitYel)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+        elif key in no_risk:
+            overlay_drawing.ellipse(coords[key], fill=colorBlnk)
+            loc_risk = Image.alpha_composite(loc_image, overlay)
+    
+    loc_risk.save('{}_risk.png'.format(i[0:len(i)-4]))
+    loc_risk.show() 
+# print(data)
 
 
 
