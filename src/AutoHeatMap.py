@@ -185,8 +185,8 @@ for i in images:
         elif key in no_risk:
             loc_risk = Image.alpha_composite(loc_image, overlay)
     
-    loc_risk.save('{}_risk.png'.format(i[0:len(i)-4]))
-    loc_risk.show()
+    loc_risk.save('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/{}_risk.png'.format(i[0:len(i)-4]))
+    #loc_risk.show()
     
     
 #***************************GENERATE WORD REPORT********************************
@@ -203,7 +203,7 @@ for section in sections:
 #*********************************PAGE 1*****************************************
 document.add_heading('SOUTH CAMPUS', 0)
 
-document.add_picture('southcamp_risk.png', width=Inches(8))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/southcamp_risk.png', width=Inches(8))
 document.add_picture('legend.png', width=Inches(8))
 
 document.add_page_break()
@@ -211,7 +211,7 @@ document.add_page_break()
 #*********************************PAGE 2*****************************************
 document.add_heading('NORTH CAMPUS', 0)
 
-document.add_picture('northcamp_risk.png', width=Inches(8))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/northcamp_risk.png', width=Inches(8))
 document.add_picture('legend.png', width=Inches(8))
 
 document.add_page_break()
@@ -219,7 +219,7 @@ document.add_page_break()
 #****************** ***************PAGE 3*****************************************
 document.add_heading('THE RIDGE', 0)
 
-document.add_picture('ridge_risk.png', width=Inches(8))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/ridge_risk.png', width=Inches(8))
 document.add_picture('legend.png', width=Inches(8))
 
 document.add_page_break()
@@ -227,7 +227,7 @@ document.add_page_break()
 #*********************************PAGE 4*****************************************
 document.add_heading('THE LIFE CENTER', 0)
 
-document.add_picture('lifecenter_risk.png', width=Inches(7))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/lifecenter_risk.png', width=Inches(7))
 document.add_picture('legend.png', width=Inches(7))
 
 document.add_page_break()
@@ -235,11 +235,11 @@ document.add_page_break()
 #*********************************PAGE 5*****************************************
 document.add_heading('MITEER, HURLEYVILLE, OUTLIERS', 0)
 
-document.add_picture('bbhville_risk.png', width=Inches(8))
-document.add_picture('therest_risk.png', width=Inches(8))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/bbhville_risk.png', width=Inches(8))
+document.add_picture('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/therest_risk.png', width=Inches(8))
 document.add_picture('legend.png', width=Inches(8))
 
-document.save('CV19 AUTO HEATMAP REPORT.docx')
+document.save('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/CV19 AUTO HEATMAP REPORT.docx')
 
 
 #*****************************GENERATE PDF REPORT***********************************
@@ -256,40 +256,41 @@ top  = Inches(6.4)
 height = Inches(0.8)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'southcamp_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/southcamp_risk.png'
 left = Inches(0.5)
 top  = Inches(0.2)
 height = Inches(3)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'northcamp_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/northcamp_risk.png'
 left = Inches(5)
 top  = Inches(0.2)
 height = Inches(2.5)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'ridge_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/ridge_risk.png'
 left = Inches(0.2)
 top  = Inches(3.2)
 height = Inches(2.5)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'lifecenter_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/lifecenter_risk.png'
 left = Inches(3.9)
 top  = Inches(3.5)
 height = Inches(2.5)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'bbhville_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/bbhville_risk.png'
 left = Inches(6.4)
 top  = Inches(2.9)
 height = Inches(1.5)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-img_path = 'therest_risk.png'
+img_path = '/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/Risk Images/therest_risk.png'
 left = Inches(6.3)
 top  = Inches(4.5)
 height = Inches(1.5)
 pic = slide.shapes.add_picture(img_path, left, top, height=height)
 
-prs.save('CV19 AUTO HEATMAP.pptx')
+prs.save('/Users/johnconoranderson/Python/Projects/Mapping/Complete HeatMap/CV19 AUTO HEATMAP.pptx')
+
