@@ -9,7 +9,7 @@ from docx.shared import Inches
 from pptx import Presentation
 from pptx.util import Inches
 
-#*****************************SETUP******************************
+#***********************************************SETUP***********************************************
 
 images = ["southcamp.jpg","northcamp.png","ridge.png","lifecenter.png","bbhville.png","therest.png"]
 
